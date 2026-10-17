@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>ClarityBoost</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header><div class="brand"><div class="logo">✦</div><div><h1>ClarityBoost</h1><p>OFFLINE VIDEO STUDIO</p></div></div><span class="local"><i></i> ON-DEVICE</span></header>
+  <main>
+    <section class="hero"><div class="eyebrow">VIDEO RESTORATION WORKSPACE</div><h2>Make every frame<br><span>look clearer.</span></h2><p>Enhance locally. Your original video stays untouched.</p></section>
+    <section class="panel">
+      <div class="section-head"><div><h3>Your video</h3><p>Choose a clip from this device</p></div><span class="step">01 / INPUT</span></div>
+      <label class="upload" for="file"><span class="upload-icon">↑</span><b>Select video</b><small>MP4 · MOV · WebM · supported by this device</small><input id="file" type="file" accept="video/*"></label>
+      <div id="fileInfo" class="file-info hidden"></div>
+      <div class="preview-wrap hidden" id="previewWrap"><canvas id="canvas"></canvas><video id="video" playsinline muted></video><div class="preview-label">LIVE PREVIEW</div><button id="play" class="play">▶</button></div>
+    </section>
+    <section class="panel">
+      <div class="section-head"><div><h3>Enhancement</h3><p>Adjust the look before exporting</p></div><span class="step">02 / TUNE</span></div>
+      <div class="sliders">
+        <label>Brightness <output id="brightnessVal">105%</output><input id="brightness" type="range" min="80" max="140" value="105"></label>
+        <label>Contrast <output id="contrastVal">115%</output><input id="contrast" type="range" min="80" max="160" value="115"></label>
+        <label>Saturation <output id="saturationVal">108%</output><input id="saturation" type="range" min="0" max="150" value="108"></label>
+        <label>Sharpen effect <output id="sharpVal">20%</output><input id="sharp" type="range" min="0" max="60" value="20"></label>
+      </div>
+      <div class="notice"><span>✧</span><p><b>Local enhancement</b><br>This prototype uses real-time image adjustments, not a neural AI model. Results depend on the source clip.</p></div>
+    </section>
+    <section class="panel">
+      <div class="section-head"><div><h3>Export settings</h3><p>Keep a balance between quality and size</p></div><span class="step">03 / OUTPUT</span></div>
+      <div class="settings">
+        <label>Capture target<select id="fps"><option value="30">30 FPS · smaller workload</option><option value="60">60 FPS · smooth</option><option value="120" selected>120 FPS · experimental</option></select></label>
+        <label>Recording quality<select id="quality"><option value="4">Compact</option><option value="7" selected>Balanced</option><option value="12">High quality</option></select></label>
+      </div>
+      <p class="muted tiny">FPS is a requested canvas capture rate; device/browser limits apply. This does not interpolate genuine new motion frames.</p>
+      <button id="export" class="primary" disabled><span>✦</span> Enhance & export</button>
+      <div id="progressArea" class="progress-area hidden"><div class="progress-top"><b id="progressText">Preparing…</b><span id="progressPct">0%</span></div><div class="track"><div id="progressBar"></div></div><p id="status" class="muted tiny">Processing on this device</p></div>
+      <a id="download" class="download hidden" download="clarityboost-enhanced.webm">↓ Save enhanced video</a>
+    </section>
+    <footer><span>CLARITYBOOST 1.0</span><span>Private by design · No upload</span></footer>
+  </main>
+</div>
+<script src="app.js"></script>
+</body></html>
