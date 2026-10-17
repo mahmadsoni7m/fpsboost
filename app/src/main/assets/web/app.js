@@ -61,8 +61,11 @@
     recorder.onstop = () => {
       const blob = new Blob(chunks, {type:mime}); if (outputUrl) URL.revokeObjectURL(outputUrl); outputUrl = URL.createObjectURL(blob);
       const a = $('download'); a.href=outputUrl; a.download='clarityboost-enhanced.webm'; a.classList.remove('hidden');
+      // Keep the completed Blob available for Android's native Save dialog.
+      window.__clarityBoostExportBlob = blob;
+      window.__clarityBoostExportName = 'clarityboost-enhanced.webm';
       $('progressBar').style.width='100%'; $('progressPct').textContent='100%'; $('progressText').textContent='Export ready';
-      setStatus(`Output ${(blob.size/1024/1024).toFixed(1)} MB · WebM · source untouched`);
+      setStatus(`Output ${(blob.size/1024/1024).toFixed(1)} MB · WebM · source untouched. Tap Save enhanced video to save it.`);
       streamCapture.getTracks().forEach(t => t.stop()); recording=false; $('export').disabled=false;
     };
     const oldTime = video.currentTime, wasPlaying = !video.paused;
@@ -79,5 +82,25 @@
       }
     }, 200);
   });
+
+  $('download').addEventListener('click', async (event) => {
+    const blob = window.__clarityBoostExportBlob;
+    if (window.AndroidSave && blob) {
+      event.preventDefault();
+      try {
+        const buffer = await blob.arrayBuffer();
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        const chunk = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunk) {
+          binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+        }
+        window.AndroidSave.saveBase64(btoa(binary), window.__clarityBoostExportName || 'clarityboost-enhanced.webm');
+      } catch (e) {
+        setStatus('Could not prepare file for Android save dialog. Try exporting a shorter clip.');
+      }
+    }
+  });
+
   window.addEventListener('beforeunload', () => { if (sourceUrl) URL.revokeObjectURL(sourceUrl); if (outputUrl) URL.revokeObjectURL(outputUrl); });
 })();
